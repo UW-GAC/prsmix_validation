@@ -5,4 +5,9 @@ workflows:
      primaryDescriptorPath: /weighted_sum_scores.wdl
      testParameterFiles:
        - /weighted_sum_scores.json
+   - name: adjust_scores_pcs
+     subclass: WDL
+     primaryDescriptorPath: /adjust_scores_pcs.wdl
+     testParameterFiles:
+       - /adjust_scores_pcs.json
      
