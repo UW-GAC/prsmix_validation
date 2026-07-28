@@ -1,0 +1,4 @@
+{
+    "weighted_sum_scores.weights": "gs://fc-43902fa4-c6a5-42fa-acfc-0f3200f3162a/submissions/final-outputs/0a88eff1-6156-4e29-8277-53b96a9b5022/elastic_net_sumstats/44f5bd63-4ac5-49e3-a643-325ca51e410d/call-select_best_model/pgs_weights_min_bic.tsv",
+    "weighted_sum_scores.scores": "gs://fc-secure-4cd3d7ca-1a20-4301-95ce-d4b66f5bf9db/GeneSTAR_raw_sum_scores.tsv"
+}

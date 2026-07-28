@@ -1,0 +1,8 @@
+version: 1.2
+workflows:
+   - name: weighted_sum_scores
+     subclass: WDL
+     primaryDescriptorPath: /weighted_sum_scores.wdl
+     testParameterFiles:
+       - /weighted_sum_scores.json
+     
