@@ -32,8 +32,8 @@ task weighted_sum {
     library(readr)
     scores <- read_tsv("~{scores}")
     weights <- read_tsv("~{weights}")
-    wts <- setNames(weights$weight, weights$score)
-    colnames(scores) <- sub("_SUM$", "", colnames(scores))
+    wts <- setNames(weights[["weight"]], weights[["score"]])
+    colnames(scores) <- sub("_SUM", "", colnames(scores))
     stopifnot(all(names(wts) %in% colnames(scores)))
     matched_scores <- scores[,names(wts)]
     weighted_scores <- sweep(as.matrix(matched_scores), MARGIN=2, STATS=wts, FUN="*")
