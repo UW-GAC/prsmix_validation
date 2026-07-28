@@ -22,8 +22,10 @@ task weighted_sum {
     input {
         File weights
         File scores
+        Int mem_gb = 8
     }
 
+    Int disk_size = ceil(2*(size(weights, "GB") + size(scores, "GB"))) + 10
 
     command <<<
     R << RSCRIPT
@@ -46,7 +48,7 @@ task weighted_sum {
 
     runtime {
         docker: "rocker/tidyverse:4"
-        disks: "local-disk 16 SSD"
-        memory: "8G"
+        disks: "local-disk ~{disk_size} SSD"
+        memory: "${mem_gb}G"
     }
 }
