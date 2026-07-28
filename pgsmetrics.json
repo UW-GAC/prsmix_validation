@@ -1,0 +1,5 @@
+{
+    "pgsmetrics.scores": "gs://fc-secure-4cd3d7ca-1a20-4301-95ce-d4b66f5bf9db/submissions/final-outputs/1480dea2-9bd6-4e0e-9c00-177c746aab63/weighted_sum_scores/194b46b0-28ac-4151-b231-5339f9751dcd/call-weighted_sum/weighted_sum.txt",
+    "pgsmetrics.trait": "gs://fc-secure-4cd3d7ca-1a20-4301-95ce-d4b66f5bf9db/GeneSTAR_TG_trait.tsv",
+    "pgsmetrics.covariates": "gs://fc-secure-4cd3d7ca-1a20-4301-95ce-d4b66f5bf9db/GeneSTAR_TG_covariates.tsv"
+}

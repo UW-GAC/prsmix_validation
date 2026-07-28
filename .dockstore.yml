@@ -10,4 +10,9 @@ workflows:
      primaryDescriptorPath: /adjust_scores_pcs.wdl
      testParameterFiles:
        - /adjust_scores_pcs.json
+   - name: pgsmetrics
+     subclass: WDL
+     primaryDescriptorPath: /pgsmetrics.wdl
+     testParameterFiles:
+       - /pgsmetrics.json
      
