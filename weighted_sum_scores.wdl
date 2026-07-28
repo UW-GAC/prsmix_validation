@@ -34,11 +34,12 @@ task weighted_sum {
     weights <- read_tsv("~{weights}")
     wts <- setNames(weights$weight, weights$score)
     colnames(scores) <- sub("_SUM$", "", colnames(scores))
-    stopifnot(all(names(weights) %in% colnames(scores)))
-    matched_scores <- scores[,names(weights)]
-    weighted_scores <- sweep(as.matrix(matched_scores), MARGIN=2, STATS=weights, FUN="*")
+    stopifnot(all(names(wts) %in% colnames(scores)))
+    matched_scores <- scores[,names(wts)]
+    weighted_scores <- sweep(as.matrix(matched_scores), MARGIN=2, STATS=wts, FUN="*")
     wtd <- rowSums(weighted_scores, na.rm=TRUE)
-    write_tsv(wtd, "weighted_sum.txt")
+    out <- tibble::tibble(IID = scores[[1]], score = wtd)
+    write_tsv(out, "weighted_sum.txt")
     RSCRIPT
     >>>
 
