@@ -30,8 +30,8 @@ task weighted_sum {
     command <<<
     R << RSCRIPT
     library(readr)
-    scores <- read_tsv("${scores}")
-    weights <- read_tsv("${weights}")
+    scores <- read_tsv("~{scores}")
+    weights <- read_tsv("~{weights}")
     wts <- setNames(weights$weight, weights$score)
     colnames(scores) <- sub("_SUM$", "", colnames(scores))
     stopifnot(all(names(weights) %in% colnames(scores)))
@@ -49,6 +49,6 @@ task weighted_sum {
     runtime {
         docker: "rocker/tidyverse:4"
         disks: "local-disk ~{disk_size} SSD"
-        memory: "${mem_gb}G"
+        memory: "~{mem_gb}G"
     }
 }
