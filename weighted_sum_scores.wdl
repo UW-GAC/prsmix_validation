@@ -30,10 +30,17 @@ task weighted_sum {
     command <<<
     R << RSCRIPT
     library(readr)
-    scores <- read_tsv("~{scores}")
+
     weights <- read_tsv("~{weights}")
-    wts <- setNames(weights[["weight"]], weights[["score"]])
+
+    score_vars_head <- read_tsv(score_file, n_max=10)
+    pgs <- intersect(names(score_vars_head), sprintf("%s_SUM", weights[["score"]]))
+    cols <- c("ID", "effect_allele", pgs)
+    scores <- data.table::fread(score_file, select=cols)
+    # Rename the columns to remove the "_SUM" suffix
     colnames(scores) <- sub("_SUM", "", colnames(scores))
+
+    wts <- setNames(weights[["weight"]], weights[["score"]])
     stopifnot(all(names(wts) %in% colnames(scores)))
     matched_scores <- scores[,names(wts)]
     weighted_scores <- sweep(as.matrix(matched_scores), MARGIN=2, STATS=wts, FUN="*")
