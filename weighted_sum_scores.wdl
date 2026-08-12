@@ -29,7 +29,7 @@ task weighted_sum {
 
     command <<<
     R << RSCRIPT
-    library(readr)
+    library(tidvyerse)
     library(data.table)
 
     weights <- read_tsv("~{weights}")
@@ -56,7 +56,7 @@ task weighted_sum {
     }
 
     runtime {
-        docker: "rocker/tidyverse:4"
+        docker: "rocker/tidyverse:4.6.1"
         disks: "local-disk ~{disk_size} SSD"
         memory: "~{mem_gb}G"
     }
