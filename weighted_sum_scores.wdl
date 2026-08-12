@@ -29,7 +29,7 @@ task weighted_sum {
 
     command <<<
     R << RSCRIPT
-    library(tidvyerse)
+    library(tidyverse)
     library(data.table)
 
     weights <- read_tsv("~{weights}")
