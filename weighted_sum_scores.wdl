@@ -30,13 +30,14 @@ task weighted_sum {
     command <<<
     R << RSCRIPT
     library(readr)
+    library(data.table)
 
     weights <- read_tsv("~{weights}")
 
-    score_vars_head <- read_tsv(score_file, n_max=10)
+    score_vars_head <- read_tsv("~{scores}", n_max=10)
     pgs <- intersect(names(score_vars_head), sprintf("%s_SUM", weights[["score"]]))
-    cols <- c("ID", "effect_allele", pgs)
-    scores <- data.table::fread(score_file, select=cols)
+    cols <- c("X.IID", pgs)
+    scores <- data.table::fread("~{scores}", select=cols) %>% as_tibble()
     # Rename the columns to remove the "_SUM" suffix
     colnames(scores) <- sub("_SUM", "", colnames(scores))
 
