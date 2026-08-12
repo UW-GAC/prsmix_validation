@@ -29,11 +29,19 @@ task weighted_sum {
 
     command <<<
     R << RSCRIPT
-    library(readr)
-    scores <- read_tsv("~{scores}")
+    library(tidyverse)
+    library(data.table)
+
     weights <- read_tsv("~{weights}")
-    wts <- setNames(weights[["weight"]], weights[["score"]])
+
+    score_vars_head <- read_tsv("~{scores}", n_max=10)
+    pgs <- intersect(names(score_vars_head), sprintf("%s_SUM", weights[["score"]]))
+    cols <- c("X.IID", pgs)
+    scores <- data.table::fread("~{scores}", select=cols) %>% as_tibble()
+    # Rename the columns to remove the "_SUM" suffix
     colnames(scores) <- sub("_SUM", "", colnames(scores))
+
+    wts <- setNames(weights[["weight"]], weights[["score"]])
     stopifnot(all(names(wts) %in% colnames(scores)))
     matched_scores <- scores[,names(wts)]
     weighted_scores <- sweep(as.matrix(matched_scores), MARGIN=2, STATS=wts, FUN="*")
@@ -48,7 +56,7 @@ task weighted_sum {
     }
 
     runtime {
-        docker: "rocker/tidyverse:4"
+        docker: "rocker/tidyverse:4.6.1"
         disks: "local-disk ~{disk_size} SSD"
         memory: "~{mem_gb}G"
     }
