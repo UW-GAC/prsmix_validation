@@ -21,6 +21,7 @@ task adjust_prs {
     input {
         File scores
         File pcs
+        File ancestry_script = "https://raw.githubusercontent.com/UW-GAC/pgsc_calc_wdl/refs/heads/main/ancestry_adjustment.R"
         Int mem_gb = 16
     }
 
@@ -29,7 +30,7 @@ task adjust_prs {
     command <<<
         R << RSCRIPT
         library(tidyverse)
-        source('https://raw.githubusercontent.com/UW-GAC/pgsc_calc_wdl/refs/heads/main/ancestry_adjustment.R')
+        source('~{ancestry_script}')
         scores <- read_tsv('~{scores}')
         pcs <- read_tsv('~{pcs}')
         model <- fit_prs(scores, pcs)
