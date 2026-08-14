@@ -33,8 +33,7 @@ task run_metrics {
     Int disk_size = ceil(2*(size(scores, "GB") + size(trait, "GB") + size(covariates, "GB"))) + 10
 
     command <<<
-    wget https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/main/run_metrics.R
-    Rscript run_metrics.R \
+        Rscript /usr/local/prsmix_validation/run_metrics.R \
         ~{scores} \
         ~{trait} \
         ~{covariates} \
