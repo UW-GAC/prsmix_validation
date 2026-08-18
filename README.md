@@ -7,7 +7,7 @@ workflows for validation of PRSMix Legacy project models
 Build the docker image:
 
 ```
- docker build --no-cache -f pgsmetrics.dockerfile -t uwgac/pgsmetrics:X.Y.Z .
+docker build --platform="linux/amd64" --no-cache -f pgsmetrics.dockerfile -t uwgac/pgsmetrics:X.Y.Z .
 ```
 
 Push the docker image:
