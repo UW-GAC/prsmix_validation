@@ -4,12 +4,14 @@ workflow adjust_scores_pcs {
     input {
         File scores
         File pcs
+        File? sample_include_file
     }
 
     call adjust_prs {
         input:
             scores = scores,
-            pcs = pcs
+            pcs = pcs,
+            sample_include_file = sample_include_file
     }
 
     output {
@@ -21,6 +23,7 @@ task adjust_prs {
     input {
         File scores
         File pcs
+        File? sample_include_file
         Int mem_gb = 16
     }
 
@@ -30,8 +33,17 @@ task adjust_prs {
         R << RSCRIPT
         library(tidyverse)
         source("/usr/local/ancestry_adjustment.R")
+
         scores <- read_tsv('~{scores}')
         pcs <- read_tsv('~{pcs}')
+        # If a sample_include_file is provided, filter the scores and pcs to only include those samples
+
+        print("Sample include file: ~{sample_include_file}")
+        sample_include <- read_tsv('~{sample_include_file}')
+
+        scores = scores %>% filter(sample_id %in% sample_include[["sample_id"]])
+        pcs = pcs %>% filter(sample_id %in% sample_include[["sample_id"]])
+
         model <- fit_prs(scores, pcs)
         mean_coef <- model[['mean_coef']]
         var_coef <- model[['var_coef']]
