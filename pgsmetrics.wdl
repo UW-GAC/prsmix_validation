@@ -36,11 +36,6 @@ task run_metrics {
     Int disk_size = ceil(2*(size(score_file, "GB") + size(phenotype_file, "GB"))) + 10
 
     command <<<
-
-        (cd /usr/local/prsmix_validation && git status)
-
-        cat /usr/local/prsmix_validation/run_metrics.R
-
         Rscript /usr/local/prsmix_validation/run_metrics.R \
         --score-file ~{score_file} \
         --phenotype-file ~{phenotype_file} \
