@@ -36,16 +36,14 @@ task adjust_prs {
 
         scores <- read_tsv('~{scores}')
         pcs <- read_tsv('~{pcs}')
-        # If a sample_include_file is provided, filter the scores and pcs to only include those samples
 
+        # If a sample_include_file is provided, filter the scores and pcs to only include those samples
         if (file.exists("~{sample_include_file}")) {
             print("Filtering samples based on sample_include_file: ~{sample_include_file}")
-            sample_include <- read_tsv('~{sample_include_file}')
-            scores = scores %>% filter(sample_id %in% sample_include[["sample_id"]])
-            pcs = pcs %>% filter(sample_id %in% sample_include[["sample_id"]])
+            sample_include <- readLines('~{sample_include_file}')
+            scores = scores %>% filter(sample_id %in% sample_include)
+            pcs = pcs %>% filter(sample_id %in% sample_include)
         }
-
-
 
         model <- fit_prs(scores, pcs)
         mean_coef <- model[['mean_coef']]
