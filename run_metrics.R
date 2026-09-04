@@ -10,7 +10,7 @@ p <- arg_parser("Run PGS metrics")
 p <- add_argument(p, "--score-file", help="Path to the score file")
 p <- add_argument(p, "--phenotype-file", help="Path to the phenotype file")
 p <- add_argument(p, "--trait-name", help="Name of the trait")
-p <- add_argument(p, "--covariates", help="Comma-separated list of covariates", default="")
+p <- add_argument(p, "--covariates", help="Comma-separated list of covariates", default=NA)
 p <- add_argument(p, "--cpu", help="Number of CPU cores", type="integer", default=1)
 
 # Parse the command line arguments
@@ -26,7 +26,11 @@ cpu <- as.integer(argv$cpu)
 score <- read_tsv(score_file)
 phenotypes <- read_tsv(phenotype_file)
 
-covars = str_split(argv$covariates, ",")[[1]]
+if (!is.na(covariates)) {
+  covars = str_split(covariates, ",")[[1]]
+} else {
+  covars = c()
+}
 
 phenotypes = phenotypes %>%
   select(IID, all_of(trait_name), all_of(covars))

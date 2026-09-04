@@ -5,7 +5,7 @@ workflow pgsmetrics {
         File score_file
         File phenotype_file
         String trait_name
-        String covariates
+        String? covariates
     }
 
     call run_metrics {
@@ -28,7 +28,7 @@ task run_metrics {
         File score_file
         File phenotype_file
         String trait_name
-        String covariates
+        String? covariates
         Int mem_gb = 8
         Int cpu = 2
     }
@@ -40,7 +40,7 @@ task run_metrics {
         --score-file ~{score_file} \
         --phenotype-file ~{phenotype_file} \
         --trait-name ~{trait_name} \
-        --covariates ~{covariates} \
+        ~{if defined(covariates) then "--covariates " + covariates else ""} \
         --cpu ~{cpu}
     >>>
 
