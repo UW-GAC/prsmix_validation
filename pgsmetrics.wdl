@@ -37,6 +37,8 @@ task run_metrics {
 
     command <<<
 
+        (cd /usr/local/prsmix_validation && git status)
+
         cat /usr/local/prsmix_validation/run_metrics.R
 
         Rscript /usr/local/prsmix_validation/run_metrics.R \
