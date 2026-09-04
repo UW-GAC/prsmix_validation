@@ -3,15 +3,17 @@ version 1.0
 workflow pgsmetrics {
     input {
         File scores
-        File trait
-        File covariates
+        File phenotype_file
+        String trait_name
+        String covariates
     }
 
     call run_metrics {
         input:
             scores = scores,
-            trait = trait,
-            covariates = covariates
+            phenotype_file = phenotype_file,
+            covariates = covariates,
+            trait_name = trait_name
     }
 
     output {
@@ -24,20 +26,22 @@ workflow pgsmetrics {
 task run_metrics {
     input {
         File scores
-        File trait
-        File covariates
+        File phenotype_file
+        String trait_name
+        String covariates
         Int mem_gb = 8
         Int cpu = 2
     }
 
-    Int disk_size = ceil(2*(size(scores, "GB") + size(trait, "GB") + size(covariates, "GB"))) + 10
+    Int disk_size = ceil(2*(size(scores, "GB") + size(phenotype_file, "GB"))) + 10
 
     command <<<
         Rscript /usr/local/prsmix_validation/run_metrics.R \
-        ~{scores} \
-        ~{trait} \
-        ~{covariates} \
-        ~{cpu}
+        --score-file ~{scores} \
+        --phenotype-file ~{phenotype_file} \
+        --trait-name ~{trait_name} \
+        --covariates ~{covariates} \
+        --cpu ~{cpu}
     >>>
 
     output {
