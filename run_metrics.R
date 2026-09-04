@@ -11,6 +11,7 @@ p <- add_argument(p, "--score-file", help="Path to the score file")
 p <- add_argument(p, "--phenotype-file", help="Path to the phenotype file")
 p <- add_argument(p, "--trait-name", help="Name of the trait")
 p <- add_argument(p, "--covariates", help="Comma-separated list of covariates", default=NA)
+p <- add_argument(p, "--sample-include-file", help="Path to the sample include file", default=NA)
 p <- add_argument(p, "--cpu", help="Number of CPU cores", type="integer", default=1)
 
 # Parse the command line arguments
@@ -21,6 +22,7 @@ score_file <- argv$score_file
 phenotype_file <- argv$phenotype_file
 trait_name <- argv$trait_name
 covariates <- argv$covariates
+sample_include_file <- argv$sample_include_file
 cpu <- as.integer(argv$cpu)
 
 score <- read_tsv(score_file)
@@ -37,6 +39,16 @@ phenotypes = phenotypes %>%
 
 dat <- score %>%
   inner_join(phenotypes)
+
+
+if (!is.na(sample_include_file)) {
+  print("Filtering samples..")
+  sample_include <- readLines(sample_include_file)
+  dat = dat %>%
+    filter(IID %in% sample_include)
+} else {
+  sample_include <- NULL
+}
 
 metrics <- pgsmetrics(
     as.data.table(dat),
