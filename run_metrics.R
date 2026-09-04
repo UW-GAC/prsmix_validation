@@ -15,6 +15,7 @@ p <- add_argument(p, "--cpu", help="Number of CPU cores", type="integer", defaul
 
 # Parse the command line arguments
 argv <- parse_args(p)
+print(argv)
 
 score_file <- argv$score_file
 phenotype_file <- argv$phenotype_file
