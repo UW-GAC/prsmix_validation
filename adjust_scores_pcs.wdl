@@ -41,8 +41,8 @@ task adjust_prs {
         if (file.exists("~{sample_include_file}")) {
             print("Filtering samples based on sample_include_file: ~{sample_include_file}")
             sample_include <- readLines('~{sample_include_file}')
-            scores = scores %>% filter(sample_id %in% sample_include)
-            pcs = pcs %>% filter(sample_id %in% sample_include)
+            scores = scores %>% filter(IID %in% sample_include)
+            pcs = pcs %>% filter(IID %in% sample_include)
         }
 
         model <- fit_prs(scores, pcs)
