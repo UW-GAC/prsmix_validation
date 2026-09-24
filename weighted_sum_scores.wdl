@@ -35,8 +35,19 @@ task weighted_sum {
     weights <- read_tsv("~{weights}")
 
     score_vars_head <- read_tsv("~{scores}", n_max=10)
-    pgs <- intersect(names(score_vars_head), sprintf("%s_SUM", weights[["score"]]))
-    cols <- c("X.IID", pgs)
+    pgs_cols <- intersect(
+        c(names(score_vars_head)),
+        # Handle names whether or not the score has a _SUM suffix.
+        c(weights[["score"]], sprintf("%s_SUM", weights[["score"]]))
+    )
+    if ("X.IID" %in% names(score_vars_head)) {
+        id_col <- "X.IID"
+    } else if ("IID" %in% names(score_vars_head)) {
+        id_col <- "IID"
+    } else {
+        stop("No IID column found in scores file")
+    }
+    cols <- c(id_col, pgs_cols)
     scores <- data.table::fread("~{scores}", select=cols) %>% as_tibble()
     # Rename the columns to remove the "_SUM" suffix
     colnames(scores) <- sub("_SUM", "", colnames(scores))
