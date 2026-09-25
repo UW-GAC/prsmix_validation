@@ -7,7 +7,6 @@ workflow validate_prsmix_adjusted {
     input {
         File weight_file
         File adjusted_scores_file
-        File pc_file
         File phenotype_file
         String trait_name
         String? covariates
