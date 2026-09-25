@@ -2,16 +2,20 @@ version 1.0
 
 workflow pgsmetrics {
     input {
-        File scores
-        File trait
-        File covariates
+        File score_file
+        File phenotype_file
+        String trait_name
+        String? covariates
+        File? sample_include_file
     }
 
     call run_metrics {
         input:
-            scores = scores,
-            trait = trait,
-            covariates = covariates
+            score_file = score_file,
+            phenotype_file = phenotype_file,
+            covariates = covariates,
+            sample_include_file = sample_include_file,
+            trait_name = trait_name
     }
 
     output {
@@ -23,22 +27,25 @@ workflow pgsmetrics {
 
 task run_metrics {
     input {
-        File scores
-        File trait
-        File covariates
+        File score_file
+        File phenotype_file
+        String trait_name
+        String? covariates
+        File? sample_include_file
         Int mem_gb = 8
         Int cpu = 2
     }
 
-    Int disk_size = ceil(2*(size(scores, "GB") + size(trait, "GB") + size(covariates, "GB"))) + 10
+    Int disk_size = ceil(2*(size(score_file, "GB") + size(phenotype_file, "GB"))) + 10
 
     command <<<
-    wget https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/main/run_metrics.R
-    Rscript run_metrics.R \
-        ~{scores} \
-        ~{trait} \
-        ~{covariates} \
-        ~{cpu}
+        Rscript /usr/local/prsmix_validation/run_metrics.R \
+        --score-file ~{score_file} \
+        --phenotype-file ~{phenotype_file} \
+        --trait-name ~{trait_name} \
+        ~{if defined(covariates) then "--covariates " + covariates else ""} \
+        ~{if defined(sample_include_file) then "--sample-include-file " + sample_include_file else ""} \
+        --cpu ~{cpu}
     >>>
 
     output {
