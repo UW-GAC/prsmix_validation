@@ -97,7 +97,7 @@ task add_cluster_id {
     command <<<
     R << RSCRIPT
     library(tidyverse)
-    cluster_id = str_extract(basename("~{sample_include_filename}"), "(?<=sample_include_cluster_)[^\\.]+")
+    cluster_id = str_match("sample_include_cluster_11.txt", "cluster_(\\d+)\\.txt")[1,2]
     read_tsv("~{pgs_metrics_file}") %>% mutate(cluster_id = cluster_id) %>% write_tsv("pgs_metrics_with_cluster.txt")
     read_tsv("~{effect_metrics_file}") %>% mutate(cluster_id = cluster_id) %>% write_tsv("effect_metrics_with_cluster.txt")
     RSCRIPT
