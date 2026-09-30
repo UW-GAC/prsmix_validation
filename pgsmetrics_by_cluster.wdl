@@ -63,7 +63,7 @@ task get_samples_by_cluster {
     for (i in seq_along(clist)) {
         cluster = clist[[i]]
         cluster_name = unique(cluster[["best_cluster"]])
-        write_tsv(cluster, paste0("sample_include_cluster_", cluster_name, ".txt"))
+        writeLines(as.character(cluster[["IID"]]), paste0("sample_include_cluster_", cluster_name, ".txt"))
     }
     RSCRIPT
     >>>
