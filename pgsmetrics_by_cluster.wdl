@@ -37,9 +37,15 @@ workflow pgsmetrics_by_cluster {
         }
     }
 
+    call combine_across_clusters {
+        input:
+            pgs_metrics_files = add_cluster_id.pgs_metrics_with_cluster,
+            effect_metrics_files = add_cluster_id.effect_metrics_with_cluster
+    }
+
     output {
-        Array[File] pgs_metrics = add_cluster_id.pgs_metrics_with_cluster
-        Array[File] effect_metrics = add_cluster_id.effect_metrics_with_cluster
+        File pgs_metrics_by_cluster = combine_across_clusters.combined_pgs_metrics
+        File effect_metrics_by_cluster = combine_across_clusters.combined_effect_metrics
     }
 
 }
@@ -106,6 +112,37 @@ task add_cluster_id {
     output {
         File pgs_metrics_with_cluster = "pgs_metrics_with_cluster.txt"
         File effect_metrics_with_cluster = "effect_metrics_with_cluster.txt"
+    }
+
+    runtime {
+        docker: "uwgac/pgsmetrics:0.1.0"
+        disks: "local-disk 10 SSD"
+        memory: "4G"
+        cpu: "1"
+    }
+}
+
+task combine_across_clusters {
+    input {
+        Array[File] pgs_metrics_files
+        Array[File] effect_metrics_files
+    }
+
+    command <<<
+    R << RSCRIPT
+    library(tidyverse)
+    files = str_split("~{sep=' ' pgs_metrics_files}", " ")[[1]]
+    pgs_metrics = lapply(files, read_tsv, show_col_types = FALSE) %>% bind_rows()
+    files = str_split("~{sep=' ' effect_metrics_files}", " ")[[1]]
+    effect_metrics = lapply(files, read_tsv, show_col_types = FALSE) %>% bind_rows()
+    write_tsv(pgs_metrics, "combined_pgs_metrics.txt")
+    write_tsv(effect_metrics, "combined_effect_metrics.txt")
+    RSCRIPT
+    >>>
+
+    output {
+        File combined_pgs_metrics = "combined_pgs_metrics.txt"
+        File combined_effect_metrics = "combined_effect_metrics.txt"
     }
 
     runtime {
