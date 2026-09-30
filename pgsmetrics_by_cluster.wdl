@@ -53,7 +53,7 @@ task get_samples_by_cluster {
 
     clusters = read_tsv("~{cluster_file}") %>% select(IID, best_cluster)
     phenotype_file = read_tsv("~{phenotype_file}") %>% select(IID)
-    clusters = clusters %>% filter(IID %in% phenotype_file$IID)
+    clusters = clusters %>% filter(IID %in% phenotype_file[["IID"]])
 
     clusters %>% group_by(best_cluster) %>% count()
     clist = clusters %>% group_by(best_cluster) %>% mutate(n=n()) %>% filter(n >= ~{min_samples_per_cluster}) %>% group_split()
@@ -62,7 +62,7 @@ task get_samples_by_cluster {
     # Write out files for each cluster
     for (i in seq_along(clist)) {
         cluster = clist[[i]]
-        cluster_name = unique(cluster$best_cluster)
+        cluster_name = unique(cluster[["best_cluster"]])
         write_tsv(cluster, paste0("sample_include_cluster_", cluster_name, ".txt"))
     }
     RSCRIPT
