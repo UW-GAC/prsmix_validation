@@ -86,7 +86,7 @@ task get_samples_by_cluster {
     }
 
     runtime {
-        docker: "uwgac/pgsmetrics:0.1.0"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/pgsmetrics:0.1.0"
         disks: "local-disk 10 SSD"
         memory: "4G"
         cpu: "1"
@@ -115,7 +115,7 @@ task add_cluster_id {
     }
 
     runtime {
-        docker: "uwgac/pgsmetrics:0.1.0"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/pgsmetrics:0.1.0"
         disks: "local-disk 10 SSD"
         memory: "4G"
         cpu: "1"
@@ -146,7 +146,7 @@ task combine_across_clusters {
     }
 
     runtime {
-        docker: "uwgac/pgsmetrics:0.1.0"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/pgsmetrics:0.1.0"
         disks: "local-disk 10 SSD"
         memory: "4G"
         cpu: "1"
