@@ -46,6 +46,7 @@ workflow pgsmetrics_by_cluster {
     output {
         File combined_pgs_metrics = combine_across_clusters.combined_pgs_metrics
         File combined_effect_metrics = combine_across_clusters.combined_effect_metrics
+        Array[File] full_pgs_metrics = run_metrics.full_pgs_metrics
     }
 
 }
