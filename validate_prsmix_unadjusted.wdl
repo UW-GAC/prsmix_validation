@@ -48,6 +48,7 @@ workflow validate_prsmix_unadjusted {
     output {
         File adjusted_scores = adjust_scores_pcs.adjusted_scores
         File pgs_metrics = pgsmetrics.pgs_metrics
+        File full_pgs_metrics = pgsmetrics.full_pgs_metrics
         File effect_metrics = pgsmetrics.effect_metrics
         File pgs_metrics_by_cluster = pgsmetrics_by_cluster.pgs_metrics_by_cluster
         File effect_metrics_by_cluster = pgsmetrics_by_cluster.effect_metrics_by_cluster
