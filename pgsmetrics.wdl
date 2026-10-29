@@ -20,6 +20,7 @@ workflow pgsmetrics {
 
     output {
         File pgs_metrics = run_metrics.pgs_metrics
+        File full_pgs_metrics = run_metrics.full_pgs_metrics
         File effect_metrics = run_metrics.effect_metrics
     }
 }
@@ -51,10 +52,11 @@ task run_metrics {
     output {
         File pgs_metrics = "pgs_metrics.txt"
         File effect_metrics = "effect_metrics.txt"
+        File full_pgs_metrics = "full_pgs_metrics.rds"
     }
 
     runtime {
-        docker: "uwgac/pgsmetrics:0.1.0"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/pgsmetrics:0.1.2"
         disks: "local-disk ~{disk_size} SSD"
         memory: "~{mem_gb}G"
         cpu: "~{cpu}"

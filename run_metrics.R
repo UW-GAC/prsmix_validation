@@ -40,15 +40,20 @@ phenotypes = phenotypes %>%
 dat <- score %>%
   inner_join(phenotypes)
 
-
 if (!is.na(sample_include_file)) {
   print("Filtering samples..")
   sample_include <- readLines(sample_include_file)
   dat = dat %>%
     filter(IID %in% sample_include)
+  print(paste("Remaining samples:", nrow(dat)))
 } else {
   sample_include <- NULL
 }
+
+print("Dropping missing values...")
+dat = dat %>%
+  drop_na()
+print(paste("Remaining samples:", nrow(dat)))
 
 metrics <- pgsmetrics(
     as.data.table(dat),
@@ -57,7 +62,11 @@ metrics <- pgsmetrics(
     covars = covars,
     n_cores = cpu
 )
+metrics$metrics$sample_size = metrics$sample_size
 write_tsv(metrics$metrics, "pgs_metrics.txt")
+
+# Save the metrics object too.
+saveRDS(metrics, "full_pgs_metrics.rds")
 
 eff_metrics <- effects_pgsmetrics(
     as.data.table(dat),
