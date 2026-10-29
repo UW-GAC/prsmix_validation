@@ -20,6 +20,7 @@ workflow pgsmetrics {
 
     output {
         File pgs_metrics = run_metrics.pgs_metrics
+        File full_pgs_metrics = run_metrics.full_pgs_metrics
         File effect_metrics = run_metrics.effect_metrics
     }
 }
@@ -51,6 +52,7 @@ task run_metrics {
     output {
         File pgs_metrics = "pgs_metrics.txt"
         File effect_metrics = "effect_metrics.txt"
+        File full_pgs_metrics = "full_pgs_metrics.rds"
     }
 
     runtime {
