@@ -51,6 +51,7 @@ workflow validate_prsmix_unadjusted {
         File full_pgs_metrics = pgsmetrics.full_pgs_metrics
         File effect_metrics = pgsmetrics.effect_metrics
         File combined_pgs_metrics_by_cluster = pgsmetrics_by_cluster.combined_pgs_metrics
+        Array[File] full_pgs_metrics_by_cluster = pgsmetrics_by_cluster.full_pgs_metrics
         File combined_effect_metrics_by_cluster = pgsmetrics_by_cluster.combined_effect_metrics
     }
 }
