@@ -1,8 +1,8 @@
 version 1.0
 
-import "https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/main/weighted_sum_scores.wdl" as weighted_sum_scores
-import "https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/main/adjust_scores_pcs.wdl" as adjust_scores_pcs
-import "https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/main/pgsmetrics.wdl" as pgsmetrics
+import "https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/combined-workflows/weighted_sum_scores.wdl" as weighted_sum_scores
+import "https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/combined-workflows/adjust_scores_pcs.wdl" as adjust_scores_pcs
+import "https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/combined-workflows/pgsmetrics.wdl" as pgsmetrics
 import "https://raw.githubusercontent.com/UW-GAC/prsmix_validation/refs/heads/combined-workflows/pgsmetrics_by_cluster.wdl" as pgsmetrics_by_cluster
 
 workflow validate_prsmix_unadjusted {
