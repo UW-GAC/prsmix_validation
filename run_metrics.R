@@ -57,6 +57,7 @@ metrics <- pgsmetrics(
     covars = covars,
     n_cores = cpu
 )
+metrics$n_samples = nrow(dat)
 write_tsv(metrics$metrics, "pgs_metrics.txt")
 
 eff_metrics <- effects_pgsmetrics(
