@@ -5,6 +5,7 @@ workflow pgsmetrics {
         File score_file
         File phenotype_file
         String trait_name
+        String score_name="score"
         String? covariates
         File? sample_include_file
     }
@@ -12,6 +13,7 @@ workflow pgsmetrics {
     call run_metrics {
         input:
             score_file = score_file,
+            score_name=score_name,
             phenotype_file = phenotype_file,
             covariates = covariates,
             sample_include_file = sample_include_file,
@@ -31,6 +33,7 @@ task run_metrics {
         File score_file
         File phenotype_file
         String trait_name
+        String score_name="score"
         String? covariates
         File? sample_include_file
         Int mem_gb = 8
@@ -42,6 +45,7 @@ task run_metrics {
     command <<<
         Rscript /usr/local/prsmix_validation/run_metrics.R \
         --score-file ~{score_file} \
+        --score-name ~{score_name} \
         --phenotype-file ~{phenotype_file} \
         --trait-name ~{trait_name} \
         ~{if defined(covariates) then "--covariates " + covariates else ""} \
@@ -56,7 +60,7 @@ task run_metrics {
     }
 
     runtime {
-        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/pgsmetrics:0.1.2"
+        docker: "us-central1-docker.pkg.dev/all-of-us-rw-prod/aou-rw-gar-remote-repo-docker-prod/uwgac/pgsmetrics:0.1.3"
         disks: "local-disk ~{disk_size} SSD"
         memory: "~{mem_gb}G"
         cpu: "~{cpu}"
