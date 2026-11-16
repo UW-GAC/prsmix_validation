@@ -8,6 +8,7 @@ p <- arg_parser("Run PGS metrics")
 
 # Add command line arguments
 p <- add_argument(p, "--score-file", help="Path to the score file")
+p <- add_argument(p, "--score-name", help="Name of the score column in the score file", default="score")
 p <- add_argument(p, "--phenotype-file", help="Path to the phenotype file")
 p <- add_argument(p, "--trait-name", help="Name of the trait")
 p <- add_argument(p, "--covariates", help="Comma-separated list of covariates", default=NA)
@@ -23,10 +24,18 @@ phenotype_file <- argv$phenotype_file
 trait_name <- argv$trait_name
 covariates <- argv$covariates
 sample_include_file <- argv$sample_include_file
+score_name <- argv$score_name
 cpu <- as.integer(argv$cpu)
 
-score <- read_tsv(score_file)
+# score <- read_tsv(score_file) %>%
+#   select(IID, all_of(score_name))
+# head(score)
+score = fread(score_file, select = c("IID", score_name)) %>%
+  as_tibble()
+head(score)
+
 phenotypes <- read_tsv(phenotype_file)
+head(phenotypes)
 
 if (!is.na(covariates)) {
   covars = str_split(covariates, ",")[[1]]
@@ -40,28 +49,37 @@ phenotypes = phenotypes %>%
 dat <- score %>%
   inner_join(phenotypes)
 
-
 if (!is.na(sample_include_file)) {
   print("Filtering samples..")
   sample_include <- readLines(sample_include_file)
   dat = dat %>%
     filter(IID %in% sample_include)
+  print(paste("Remaining samples:", nrow(dat)))
 } else {
   sample_include <- NULL
 }
 
+print("Dropping missing values...")
+dat = dat %>%
+  drop_na()
+print(paste("Remaining samples:", nrow(dat)))
+
 metrics <- pgsmetrics(
     as.data.table(dat),
-    pgs = "score",
+    pgs = score_name,
     dep = trait_name,
     covars = covars,
     n_cores = cpu
 )
+metrics$metrics$sample_size = metrics$sample_size
 write_tsv(metrics$metrics, "pgs_metrics.txt")
+
+# Save the metrics object too.
+saveRDS(metrics, "full_pgs_metrics.rds")
 
 eff_metrics <- effects_pgsmetrics(
     as.data.table(dat),
-    pgs = "score",
+    pgs = score_name,
     dep = trait_name,
     covars = covars,
     report_covars = TRUE
