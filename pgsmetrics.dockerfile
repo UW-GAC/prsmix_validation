@@ -1,4 +1,4 @@
-FROM rocker/tidyverse:4
+FROM rocker/tidyverse:4.5.2
 
 RUN mkdir -p /usr/local
 RUN (cd /usr/local && wget https://raw.githubusercontent.com/UW-GAC/pgsc_calc_wdl/refs/heads/main/ancestry_adjustment.R)
